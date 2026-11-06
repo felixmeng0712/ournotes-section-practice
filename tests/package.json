@@ -1,0 +1,11 @@
+{
+  "name": "ournotes-practice-tests",
+  "private": true,
+  "description": "Headless Chrome checks against a running server.py (python3 server.py --port 8765)",
+  "scripts": {
+    "regress": "sh regress.sh"
+  },
+  "dependencies": {
+    "playwright-core": "1.48"
+  }
+}

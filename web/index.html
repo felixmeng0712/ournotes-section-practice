@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#120c26">
+<title>Section Practice</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a2468'/%3E%3Cg fill='%23fff'%3E%3Crect x='5' y='7' width='3' height='18' rx='1'/%3E%3Crect x='24' y='7' width='3' height='18' rx='1'/%3E%3Crect x='12' y='9' width='6' height='3' rx='1'/%3E%3Crect x='14' y='15' width='6' height='3' rx='1'/%3E%3Crect x='12' y='21' width='8' height='3' rx='1'/%3E%3C/g%3E%3Cg fill='%23ff6fb5'%3E%3Ccircle cx='10' cy='13' r='1.3'/%3E%3Ccircle cx='10' cy='19' r='1.3'/%3E%3Ccircle cx='22' cy='13' r='1.3'/%3E%3Ccircle cx='22' cy='19' r='1.3'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="bg"><div id="bgImg"></div></div>
+<div id="safe" aria-hidden="true"></div>
+<canvas id="cv" hidden></canvas>
+<button id="btnPause" class="iconbtn" hidden data-i18n-attr="aria-label:pause.aria"><span></span><span></span></button>
+
+<div id="pause" class="overlay" hidden>
+  <div class="card">
+    <h2 data-i18n="paused"></h2>
+    <p class="sub" id="pauseInfo"></p>
+    <div class="actions">
+      <button class="btn primary" id="btnResume" data-i18n="resume"></button>
+      <button class="btn" id="btnRestart" data-i18n="restart"></button>
+      <button class="btn ghost" id="btnExit" data-i18n="backToSelect"></button>
+    </div>
+    <p class="keys" data-i18n-html="keys.pause"></p>
+  </div>
+</div>
+
+<div id="result" class="overlay" hidden>
+  <div class="card">
+    <div id="resBadge"></div>
+    <div id="resCounts" class="counts"></div>
+    <div id="resMeta" class="meta"></div>
+    <div class="dist"><canvas id="resDist"></canvas><div class="axis"><span data-i18n="early"></span><span>0</span><span data-i18n="late"></span></div></div>
+    <details id="resMiss" hidden><summary></summary><ol></ol></details>
+    <div class="actions">
+      <button class="btn primary" id="btnAgain" data-i18n="again"></button>
+      <button class="btn ghost" id="btnBack" data-i18n="backToSelect"></button>
+    </div>
+    <p class="keys" data-i18n-html="keys.result"></p>
+  </div>
+</div>
+
+<div id="toast" hidden></div>
+
+<main id="setup">
+  <aside id="rail">
+    <div class="brand"><b data-i18n="brand"></b><small>BanG Dream! Our Notes</small></div>
+    <input id="search" type="search" data-i18n-attr="placeholder:search" autocomplete="off" spellcheck="false">
+    <div id="bands" class="chips"></div>
+    <ul id="songList"></ul>
+  </aside>
+
+  <section id="stage">
+    <p id="status" role="status"></p>
+    <div id="hero">
+      <img id="jacket" alt="">
+      <div class="info">
+        <h1 id="title" data-i18n="pick"></h1>
+        <p id="band"></p>
+        <p id="facts"></p>
+      </div>
+    </div>
+    <div id="diffs"></div>
+
+    <div id="secPanel">
+      <div class="head"><h3 data-i18n="section"></h3><span id="secInfo"></span></div>
+      <canvas id="tl"></canvas>
+      <div class="secRow">
+        <label><span data-i18n="barFrom"></span> <input id="mA" type="number" min="1" value="1" inputmode="numeric"> <span data-i18n="barTo"></span></label>
+        <span class="to" data-i18n="to"></span>
+        <label><span data-i18n="barFrom2"></span> <input id="mB" type="number" min="1" value="1" inputmode="numeric"> <span data-i18n="barTo"></span></label>
+        <span class="grow"></span>
+        <button class="btn sm" id="btnShiftL" data-i18n="shiftL" data-i18n-attr="title:shiftL.title"></button>
+        <button class="btn sm" id="btnShiftR" data-i18n="shiftR" data-i18n-attr="title:shiftR.title"></button>
+        <button class="btn sm" id="btnAll" data-i18n="whole"></button>
+      </div>
+      <div id="hardRow" class="hardRow" hidden><span class="lab" data-i18n="hard"></span></div>
+    </div>
+
+    <div id="go">
+      <button id="btnStart" disabled><b data-i18n="start"></b><small id="startSub"></small></button>
+      <div class="toggles">
+        <label class="sw"><input type="checkbox" id="optLoop"><i></i><span data-i18n="loop"></span></label>
+        <label class="sw"><input type="checkbox" id="optAuto"><i></i><span data-i18n="auto"></span></label>
+      </div>
+      <span class="grow"></span>
+      <button class="btn" id="btnMore" aria-haspopup="dialog"><span data-i18n="more"></span><small id="setSummary"></small></button>
+    </div>
+  </section>
+
+  <div id="more" hidden role="dialog" data-i18n-attr="aria-label:more">
+    <div class="scrim" id="moreScrim"></div>
+    <div class="sheet">
+      <div class="tabs" role="tablist">
+        <button type="button" data-tab="coach" data-i18n="tab.coach"></button>
+        <button type="button" data-tab="hist" data-i18n="tab.hist"></button>
+        <button type="button" data-tab="settings" data-i18n="tab.settings"></button>
+        <button type="button" data-tab="backup" data-i18n="tab.backup"></button>
+        <button type="button" data-tab="help" data-i18n="tab.help"></button>
+        <span class="grow"></span>
+        <button type="button" class="close" id="moreClose" data-i18n-attr="aria-label:close">✕</button>
+      </div>
+      <div class="panes">
+        <div id="coachPanel" class="pane" data-pane="coach" hidden>
+      <div class="head"><h3 data-i18n="coach.head"></h3><span id="coachInfo"></span></div>
+      <div id="trouble" hidden><h4></h4><ol></ol></div>
+      <div class="coach">
+        <div class="stripCol">
+          <div class="stripBox" id="stripBox"><canvas id="strip"></canvas></div>
+          <div class="legend"><span class="hL" data-i18n="hand.left"></span><span class="hR" data-i18n="hand.right"></span><span data-i18n="readUp"></span></div>
+        </div>
+        <ol id="pats"></ol>
+      </div>
+      <div class="drills">
+        <button class="btn sm primary" id="btnDrill" data-i18n="drill.slow"></button>
+        <button class="btn sm" id="btnDemo" data-i18n="drill.demo"></button>
+        <button class="btn sm" id="btnSoloL" data-i18n="drill.L"></button>
+        <button class="btn sm" id="btnSoloR" data-i18n="drill.R"></button>
+      </div>
+      <p class="hint" id="drillHint"></p>
+    </div>
+        <div id="histPanel" class="pane" data-pane="hist">
+      <div class="head"><h3 data-i18n="hist.head"></h3><span id="histInfo"></span><span class="grow"></span><button class="btn sm ghost" id="btnClearHist" hidden data-i18n="clear"></button></div>
+      <p id="offHint" hidden></p>
+      <svg id="spark" hidden></svg>
+      <ol id="hist"></ol>
+      <p class="empty" id="histEmpty" data-i18n="hist.empty"></p>
+    </div>
+        <div id="settings" class="pane" data-pane="settings">
+          <p id="outInfo" hidden></p>
+          <div class="sliders" id="sliders"></div>
+          <div class="toggles">
+            <label class="sw"><input type="checkbox" id="optHands"><i></i><span data-i18n="opt.hands"></span></label>
+            <label class="sw"><input type="checkbox" id="optKeys"><i></i><span data-i18n="opt.keys"></span></label>
+          </div>
+          <div class="langRow"><label for="lang" data-i18n="lang"></label><select id="lang"></select>
+          </div>
+        </div>
+        <div id="backup" class="pane" data-pane="backup">
+          <h4 data-i18n="offline"></h4>
+          <div id="offline">
+      <div class="offRow"><span id="offInfo" data-i18n="off.checking"></span><button class="btn sm" id="btnDl" data-i18n="dlAll"></button></div>
+      <div class="bar" hidden><i id="dlBar"></i></div>
+    </div>
+          <h4 data-i18n="backup.head"></h4>
+          <p data-i18n="backup.text"></p>
+      <div class="row"><button class="btn sm" id="btnExport" data-i18n="export"></button><button class="btn sm" id="btnImport" data-i18n="import"></button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+      <p id="backupMsg" hidden></p>
+        </div>
+        <div id="help" class="pane" data-pane="help">
+          <ul></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="js/ui.js"></script>
+</body>
+</html>

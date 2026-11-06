@@ -1,0 +1,11 @@
+.DS_Store
+data/
+export/
+logs/
+tests/node_modules/
+xcuserdata/
+*.xcuserstate
+build/
+DerivedData/
+
+web/official/
