@@ -25,14 +25,14 @@ Charts and music are loaded from [bdon.yatta.moe](https://bdon.yatta.moe) throug
 python3 server.py --port 8000
 ```
 
-Then open <http://localhost:8000>. Phones and tablets on the same Wi-Fi can open `http://<your computer's IP>:8000`. On a Mac, double-clicking `启动练习器.command` does the same.
+Then open <http://localhost:8000>. Phones and tablets on the same Wi-Fi can open `http://<your computer's IP>:8000`. On a Mac, double-clicking `start.command` does the same.
 
 **iPhone / iPad (app)**
 
 Needs a Mac with Xcode and [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`).
 
-1. In `ios/project.yml`, set `DEVELOPMENT_TEAM` to your Apple team ID (a free Apple ID works) and change `bundleIdPrefix` / `PRODUCT_BUNDLE_IDENTIFIER` to something of your own. Use the same bundle ID in `ios/安装到iPhone.command`.
-2. Connect the phone, unlock it, and double-click `ios/安装到iPhone.command` (or run `xcodegen generate` and build `ios/OurNotesPractice.xcodeproj` in Xcode).
+1. In `ios/project.yml`, set `DEVELOPMENT_TEAM` to your Apple team ID (a free Apple ID works) and change `bundleIdPrefix` / `PRODUCT_BUNDLE_IDENTIFIER` to something of your own.
+2. Connect the phone, unlock it, and double-click `ios/install-on-iphone.command` (or run `xcodegen generate` and build `ios/OurNotesPractice.xcodeproj` in Xcode).
 3. The first time, trust your developer certificate on the phone under Settings › General › VPN & Device Management. Apps signed with a free Apple ID stop opening after 7 days; reinstall to renew.
 
 The app bundles the same web app and proxies yatta itself, so no computer is needed once it is installed.
